@@ -7,6 +7,7 @@
 
 #define PORT 12345
 #define BUFFER_SIZE 1024
+using namespace std;
 
 int main() {
     // create a socket using socket()
@@ -26,10 +27,31 @@ int main() {
     server_addr.sin_port = htons(PORT); // Convert port to network byte order
 
     if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
-        std::cerr << "Failed to bind socket" << std::endl;
+        cerr << "Failed to bind socket" << endl;
         close(server_socket);
         return 1;
     }
-
     
+    // listen for incoming connections
+    if (listen(server_socket, 5) == -1){
+        cerr << "Failed to listen on socket" << endl;
+        close(server_socket);
+        return 1;
+    }
+    cout << "Server is listening on port " << PORT << "..." << endl;
+
+    //start of the stateful machine
+    while (true){
+        // accept a new connection
+
+        // receive data from client 
+
+        // send data to client
+
+        // close the connection
+    }
+
+    // close connection
+
+    return 0;
 }
