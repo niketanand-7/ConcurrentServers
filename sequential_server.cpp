@@ -43,15 +43,36 @@ int main() {
     //start of the stateful machine
     while (true){
         // accept a new connection
-
+        struct sockaddr_in client_addr;
+        socklen_t client_len = sizeof(client_addr);
+        int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
+        if (client_socket == -1){
+            cout << "Failed to accept client connection" << endl;
+            continue;
+        }
         // receive data from client 
+        char buffer[BUFFER_SIZE];
+        memset(buffer, 0, BUFFER_SIZE);
+        ssize_t bytes_received = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
+        if (bytes_received == -1) {
+            cerr << "Failed to receive data from client" << endl;
+        } else {
+            cout << "Received data: " << buffer << endl;
 
-        // send data to client
+             // send data to client
+            const char* response = "Response from server";
+            ssize_t bytes_sent = send(client_socket, response, strlen(response), 0);
+            if (bytes_sent == -1) {
+                cerr << "Failed to send response to client" << endl;
+            }
+        }
 
         // close the connection
+        close(client_socket);
+        cout<<"Client connection closed"<<endl;
     }
 
     // close connection
-
+    close(server_socket);
     return 0;
 }
