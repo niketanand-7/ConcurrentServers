@@ -5,19 +5,15 @@
 #include <unistd.h>     // For close()
 #include <cstdint>      // For uint8_t
 
-// Define the processing states
 enum ProcessingState { WAIT_FOR_MSG, IN_MSG };
 
 // Function to handle communication with a client
 void serve_connection(int sockfd) {
-    // Send an initial acknowledgment to the client
     if (send(sockfd, "*", 1, 0) < 1) {
         perror("send error");
         close(sockfd);
         return;
     }
-
-    // Start in the WAIT_FOR_MSG state
     ProcessingState state = WAIT_FOR_MSG;
     uint8_t buf[1024];  // Buffer for receiving data
 
